@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Feedback List</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5e6d3;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5d4037;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #bca18a;
+            text-align: left;
+        }
+
+        th {
+            background: #795548;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Student Feedback List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Department</th>
+                <th>Category</th>
+                <th>Rating</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+
+        <tbody id="feedbackList">
+            <tr>
+                <td colspan="5">Loading feedback...</td>
+            </tr>
+        </tbody>
+    </table>
+<script>
+async function loadFeedback() {
+    try {
+        const response = await fetch('/feedback-list');
+        const feedbacks = await response.json();
+
+        const table = document.getElementById('feedbackList');
+
+        table.innerHTML = '';
+
+        feedbacks.forEach(item => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${item.studentName}</td>
+                <td>${item.department}</td>
+                <td>${item.category}</td>
+                <td>${item.rating}</td>
+                <td>${item.feedback}</td>
+            `;
+
+            table.appendChild(row);
+        });
+
+        if (feedbacks.length === 0) {
+            table.innerHTML = '<tr><td colspan="5">No feedback available</td></tr>';
+        }
+
+    } catch (error) {
+        console.error('Error loading feedback:', error);
+    }
+}
+
+loadFeedback();
+</script>
+</body>
+</html>
